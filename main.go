@@ -39,8 +39,8 @@ func main() {
 				Aliases:     []string{"f"},
 				Destination: &filename,
 				Name:        "file",
-				Required:    true,
-				Usage:       "name of output file",
+				Usage:       "name of CSV output file",
+				Value:       "repo-admins.csv",
 			},
 			&cli.Int64Flag{
 				Aliases:     []string{"d"},
