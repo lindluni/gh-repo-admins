@@ -18,7 +18,7 @@ func main() {
 	app := &cli.App{
 		Name:        "repo-admins",
 		Usage:       "query repository admins",
-		Version:     "1.0.0",
+		Version:     "1.0.2",
 		Description: "gh repo-admins --owner [owner] --repo [repo]\ngh repo-admins --help",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
