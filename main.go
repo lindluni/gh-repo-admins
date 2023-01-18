@@ -66,6 +66,8 @@ func main() {
 			}
 
 			var users []*user
+			var existingUsers = make(map[string]bool)
+
 			for _, team := range teams {
 				if team.Permission == "admin" {
 					log.Printf("Retrieving members for team: %s", team.Name)
@@ -80,7 +82,24 @@ func main() {
 							return err
 						}
 						users = append(users, user)
+						existingUsers[user.Login] = true
 					}
+				}
+			}
+
+			log.Printf("Retrieving direct repository members for %s/%s", owner, repo)
+			directMembers, err := retrieveDirectMembers(restClient, owner, repo, delay)
+			if err != nil {
+				return err
+			}
+			for _, member := range directMembers {
+				log.Printf("Retrieving user: %s", member.Login)
+				user, err := retrieveUser(restClient, member.Login, delay)
+				if err != nil {
+					return err
+				}
+				if !existingUsers[user.Login] {
+					users = append(users, user)
 				}
 			}
 
@@ -99,9 +118,10 @@ func main() {
 }
 
 type user struct {
-	Login string
-	Name  string
-	Email string
+	Login      string
+	Name       string
+	Email      string
+	Permission string
 }
 
 type team struct {
@@ -130,6 +150,26 @@ func retrieveTeamMembers(client api.RESTClient, org, slug string, delay time.Dur
 		err := client.Get(url, &members)
 		if err != nil {
 			return nil, fmt.Errorf("error retrieving team members: %v", err)
+		}
+		time.Sleep(delay)
+		if len(members) == 0 {
+			break
+		}
+		allMembers = append(allMembers, members...)
+		page = page + 1
+	}
+	return allMembers, nil
+}
+
+func retrieveDirectMembers(client api.RESTClient, owner, repo string, delay time.Duration) ([]*user, error) {
+	var allMembers []*user
+	var page = 1
+	for {
+		var members []*user
+		url := fmt.Sprintf("repos/%s/%s/collaborators?affiliation=direct&permission=admin&page=%d&per_page=100", owner, repo, page)
+		err := client.Get(url, &members)
+		if err != nil {
+			return nil, fmt.Errorf("error retrieving direct members: %v", err)
 		}
 		time.Sleep(delay)
 		if len(members) == 0 {
