@@ -28,7 +28,7 @@ USAGE:
    repo-admins [global options] command [command options] [arguments...]
 
 VERSION:
-   1.0.2
+   1.1.0
 
 DESCRIPTION:
    gh repo-admins --owner [owner] --repo [repo]
