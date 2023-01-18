@@ -3,6 +3,9 @@
 `gh-repo-admins` is a GitHub CLI extension used to retrieve a list of repository admins. This is useful when attempting
 to respond to security incidents or to determine who to make administrative requests to.
 
+**Note:** The extension will retrieve the username, public full name, and public email address of all repository admins. 
+If a users name or email are not public, only the username will be returned.
+
 **Note:** You must have at least `read` access to the repository in order to use this extension.
 
 ## Pre-requisites
