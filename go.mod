@@ -1,10 +1,9 @@
 module github.com/lindluni/gh-repo-admins
 
-go 1.18
+go 1.19
 
 require (
 	github.com/cli/go-gh v1.0.0
-	github.com/davecgh/go-spew v1.1.1
 	github.com/urfave/cli/v2 v2.23.7
 )
 
